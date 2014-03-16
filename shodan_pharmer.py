@@ -50,6 +50,7 @@ def parse_args():
    parser.add_argument("-f", "--findhtml", help="Search html for a string; can be used to determine if a login was successful")
    parser.add_argument("-u", "--username", help="Enter username after this arg")
    parser.add_argument("-p", "--password", help="Enter password after this arg")
+   parser.add_argument("-ip", "--ipaddress", help="Enter a single IP to test")
    parser.add_argument("-t", "--textboxes", help="Enter this flag if the device has a form login with text/password boxes rather than HTTP basic auth", action='store_true')
    parser.add_argument("-api", "--apikey", help="Your api key")
    return parser.parse_args()
@@ -58,7 +59,7 @@ def shodan_search(search, apikey):
     if apikey:
         API_KEY = args.apikey
     else:
-        API_KEY = 'ENTER YOUR API KEY HERE'
+        API_KEY = 'ENTER YOUR API KEY HERE AND KEEP THE QUOTES'
     api = WebAPI(API_KEY)
 
     ips_found = []
@@ -229,7 +230,11 @@ class Scraper():
 def main(args):
 
     S = Scraper(args)
-    ips = shodan_search(args.search, args.apikey)
+
+    if args.ipaddress:
+        ips = ['%s' % args.ipaddress]
+    else:
+        ips = shodan_search(args.search, args.apikey)
 
     # Run 200 concurrently at a time
     ip_groups = [ips[x:x+200] for x in xrange(0, len(ips), 200)]
