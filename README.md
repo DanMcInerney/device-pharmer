@@ -1,4 +1,4 @@
-Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to <your_shodan_search_terms>_results.txt
+Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to your_shodan_search_terms_results.txt
 
 Default timeout on the requests is 12 seconds. Sends batches of 200 requests concurrently although you can adjust this limit on one line in the main function. 
 
@@ -6,38 +6,36 @@ Default timeout on the requests is 12 seconds. Sends batches of 200 requests con
 Requirements:
 -----
 
-### Shodan API Key
-Options
-* Give the script the -api <YOUR API KEY> argument
-* Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;)
-Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
+Shodan API Key
+* Give the script the -api <YOUR API KEY> argument OR
+* Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
 
-### Python 2.7
+Python 2.7
 * mechanize
 * gevents
 * BeautifulSoup
 * shodan
 
-### Modern linux
-* Test on Kali 1.0.6
+Modern linux
+* Tested on Kali 1.0.6
 
 Usage
 -----
 
 ``` shell
-python ./shodan_pharmer.py -s 'dd-wrt' -t -u root -p admin -f 'Advanced Routing'
+python shodan_pharmer.py -s 'dd-wrt' -t -u root -p admin -f 'Advanced Routing'
 ```
 Search Shodan for "dd-wrt" and attempt to login to the results using the username root and the password admin along with whether "Advanced Routing" appeared in the response html. Due to the addition of the -t for --textbox argument this will attempt to login using both a form sign-in page and HTTP Basic Auth if there aren't any forms in response. Without the -t option it will only attempt HTTP Basic Auth which will have minor performance benefits. You can put raw html in the -f argument as well.
 
 
 ``` shell
-python ./shodan_pharmer.py -s 'dd-wrt'
+python shodan_pharmer.py -s 'dd-wrt'
 ```
 Hit all the IPs in the Shodan results and return the status and the title if it responds.
 
 
 ``` shell
-python ./shodan_pharmer.py -ip 192.168.1.1 
+python shodan_pharmer.py -ip 192.168.1.1 
 ```
 Try hitting a single device's IP address.
 
