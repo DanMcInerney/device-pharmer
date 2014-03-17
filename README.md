@@ -1,6 +1,6 @@
 Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to YourShodanSearch_results.txt where YourShodanSearch is the argument you entered after -s.
 
-Default timeout on the requests is 12 seconds. Sends batches of 200 requests concurrently although you can adjust this limit on one line in the main function. 
+Default timeout on the requests is 12 seconds. Sends batches of 200 requests concurrently although you can adjust this limit on one line in the main function. Not really any reason it's set to 200, should be fine in the thousands but just to make sure slower networks won't see any problems it is set to 200. If you are using a free Shodan API key then your results will be limited to 100 by Shodan anyway. 
 
 
 Requirements:
