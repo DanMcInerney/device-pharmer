@@ -57,7 +57,7 @@ def parse_args():
 
 def shodan_search(search, apikey):
     if apikey:
-        API_KEY = args.apikey
+        API_KEY = apikey
     else:
         API_KEY = 'ENTER YOUR API KEY HERE AND KEEP THE QUOTES'
     api = WebAPI(API_KEY)
