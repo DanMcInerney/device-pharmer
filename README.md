@@ -42,21 +42,19 @@ Try hitting a single device's IP address.
 
 ### All options:
 
--s SEARCH: search Shodan for term(s) and print each IP address, whether the page returned a response, and if so print the title of the returned page (follows redirects)
+-api APIKEY: use this API key when searching Shodan
 
 -f FINDTERMS: search for the argument string in the html of each response; upon a match print it and log it
+
+-ip IPADDRESS: try hitting this ip address rather than shodan search results and return response information
+
+-p PASSWORD: attempt to login using this password
+
+-s SEARCHTERMS: search Shodan for term(s) and print each IP address, whether the page returned a response, and if so print the title of the returned page (follows redirects)
 
 -t: Try to find a form to login to on the response page and default back to HTTP Basic Auth if no forms are found 
 
 -u USERNAME: attempt to login using this username
-
--p PASSWORD: attempt to login using this password
-
--ip IPADDRESS: try hitting this ip address rather than shodan search results and return response information
-
--api APIKEY: use this API key when searching Shodan
-
--u USERNAME: username to use with HTTP Basic Auth which is used because no -t
 
 
 License
