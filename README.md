@@ -1,4 +1,4 @@
-Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to your_shodan_search_terms_results.txt
+Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to YourShodanSearch_results.txt where YourShodanSearch is the argument you entered after -s.
 
 Default timeout on the requests is 12 seconds. Sends batches of 200 requests concurrently although you can adjust this limit on one line in the main function. 
 
@@ -7,7 +7,7 @@ Requirements:
 -----
 
 Shodan API Key
-* Give the script the -api <YOUR API KEY> argument OR
+* Give the script the -api YOUR_API_KEY argument OR
 * Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
 
 Python 2.7
