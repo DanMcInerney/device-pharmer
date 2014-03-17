@@ -25,7 +25,7 @@ Usage
 ``` shell
 python shodan_pharmer.py -s 'dd-wrt' -t -u root -p admin -f 'Advanced Routing'
 ```
-Search Shodan for "dd-wrt" and attempt to login to the results using the username root and the password admin along with whether "Advanced Routing" appeared in the response html. Due to the addition of the -t for --textbox argument this will attempt to login using both a form sign-in page and HTTP Basic Auth if there aren't any forms in response. Without the -t option it will only attempt HTTP Basic Auth which will have minor performance benefits. You can put raw html in the -f argument as well.
+Search Shodan for "dd-wrt" and attempt to login to the results using the username root and the password admin; then check if the landing page's HTML contains the string "Advanced Routing". Due to the addition of the -t aregument for --textbox this will attempt to login using both a form sign-in page and HTTP Basic Auth if there aren't any forms in the response. Without the -t option it will only attempt HTTP Basic Auth which will have minor performance benefits. You can put raw html in the -f argument as well.
 
 
 ``` shell
