@@ -312,7 +312,7 @@ class Scraper():
             results = '[%s] %s | %s %s' % (mark, target, label, sublabel)
             if mark == '*' or mark == '+':
                 with open('%s_results.txt' % name, 'a+') as f:
-                    f.write('[%s] %s | %s\n' % (mark, target, label))
+                    f.write('[%s] %s | %s %s\n' % (mark, target, label, sublabel))
             print results
         except Exception as e:
             results = '[%s] %s | %s %s' % (mark, target, label, str(e))
