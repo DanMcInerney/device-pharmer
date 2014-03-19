@@ -18,7 +18,7 @@ Modern linux
 
 Shodan API Key (only if you are giving the -s SEARCHTERM argument)
 * Give the script the -api YOUR_API_KEY argument OR
-* Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
+* Edit line 82 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
 
 
 Usage
