@@ -39,7 +39,7 @@ Targeting 192.168.0-2.1-100 is telling the script to concurrently open 192.168.0
 ``` shell
 python device_pharmer.py -t www.reddit.com/login -ssl -u sirsmit418 -p whoopwhoop -f 'tattoos'
 ```
-Try logging into www.purple.com/login using HTTPS specifically with the username JigsUp and password whoopwhoop. Look for the text "tattoos" correlating to a subscribed subreddit in the response html.
+Try logging into www.reddit.com/login using HTTPS specifically with the username sirsmit418 and password whoopwhoop. Look for the text "tattoos" correlating to a subscribed subreddit in the response html to check for authentication success.
 
 
 ### All options:
