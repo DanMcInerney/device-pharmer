@@ -25,7 +25,7 @@ Usage
 -----
 
 ``` shell
-python login_pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
+python device_pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
 ```
 Search Shodan for "dd-wrt" using the given api key and attempt to login to the results using the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string "Advanced Routing". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found.
 
