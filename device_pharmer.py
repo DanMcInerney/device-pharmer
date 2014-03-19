@@ -199,16 +199,16 @@ class Scraper():
         return basic_auth_resp, brtitle
 
     def resp_to_textboxes(self, target):
-        ''' Find first input with type=text
-        then first input with type=password.
-        If form login fails, try basic auth
-        and if that fails, try no auth '''
+        ''' Find the first form on the page that has exactly 1 text box and 1 password box.
+        Fill it out with the credentials the user provides. If no form is found, try
+        authenticating with HTTP Basic Auth and if that also fails, try just getting a response. '''
         brtitle1 = None
 
         try:
             resp = self.br.open('%s' % target)
             brtitle1 = self.br.title()
-            self.br.form = list(self.br.forms())[0]
+            forms = self.br.forms()
+            self.br.form = self.find_password_form(forms)
             resp = self.fill_out_form()
             brtitle = self.br.title()
         except Exception:
@@ -223,6 +223,18 @@ class Scraper():
             brtitle = brtitle1
 
         return resp, brtitle
+
+    def find_password_form(self, forms):
+        for f in forms:
+            pw = 0
+            text = 0
+            for c in f.controls:
+                if c.type == 'text':
+                    text = text+1
+                if c.type == 'password':
+                    pw = pw+1
+            if pw == 1 and text == 1:
+                return f
 
     def fill_out_form(self):
         ''' Find the first text and password controls and fill them out '''
