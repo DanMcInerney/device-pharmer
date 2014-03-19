@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 '''
-Concurrently open either Shodan search results, a specified IP, IP range,
-or domain and print the status and title of the page. Add the -u and -p
-options to attempt to login to the page. Use -f to look for a certain
-string in the html response to check if authentication succeeded.
-Will attempt to login first via a login form and should that fail or not
-exist, login via HTTP Basic Auth.
+Concurrently open either Shodan search results, a specified IP range, a
+single IP, or domain and print the status and title of the page.
+Add the -u and -p options to attempt to login to the page.
+Use -f to look for a certain string in the html response to check if
+authentication succeeded. Will attempt to login first via a login form
+and should that fail or not exist, login via HTTP Basic Auth.
 
 eequires:   Linux
             Python 2.7
@@ -31,7 +31,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import gevent
-from shodan import WebAPI
 import argparse
 import mechanize
 from BeautifulSoup import BeautifulSoup
@@ -77,6 +76,8 @@ def parse_args():
    return parser.parse_args()
 
 def shodan_search(search, apikey, pages):
+    from shodan import WebAPI
+
     if apikey:
         API_KEY = apikey
     else:
@@ -122,7 +123,6 @@ def max_pages(pages, total_results):
     else:
         return pages
 
-
 def browser_mechanize():
     ''' Start headless browser '''
     br = mechanize.Browser()
@@ -151,6 +151,7 @@ class Scraper():
             self.uri_prefix = 'https://'
         else:
             self.uri_prefix = 'http://'
+        self.targets = args.targets
         self.br = browser_mechanize()
 
     def run(self, target):
@@ -285,22 +286,32 @@ class Scraper():
 
     def final_print(self, mark, target, label, sublabel):
         target = target.ljust(23)
+
+        if self.search:
+            name = self.search
+        elif self.targets:
+            name = self.targets
+        else:
+            name = None
+
+        name = name.replace('/', '')
+
         try:
             results = '[%s] %s | %s %s' % (mark, target, label, sublabel)
             if mark == '*' or mark == '+':
-                with open('%s_results.txt' % self.search, 'a') as f:
+                with open('%s_results.txt' % name, 'a+') as f:
                     f.write('[%s] %s | %s\n' % (mark, target, label))
             print results
         except Exception as e:
             results = '[%s] %s | %s %s' % (mark, target, label, str(e))
-            with open('%s_results.txt' % self.search, 'a') as f:
+            with open('%s_results.txt' % name, 'a+') as f:
                 f.write('%s\n' % results)
             print results
 
 
 #############################################################################
 # IP range target handlers
-# Taken from against.py by pigtails23 with minor modifications
+# Taken from against.py by pigtails23 with minor modification
 #############################################################################
 def get_targets_from_args(targets):
     target_type = check_targets(targets)

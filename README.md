@@ -1,58 +1,62 @@
-Search Shodan for devices then concurrently test all the results with the same credentials. Optionally specify a bit of HTML or text from the source of the logged-in homepage to see if the authentication succeeded. If no authentication is necessary, simpy print the IP and page title of the response. Capable of both HTTP Basic Auth as well as form logins with -f. Logs active devices to YourShodanSearch_results.txt where YourShodanSearch is the argument you entered after -s.
+Concurrently open either Shodan search results, a specified IP, IP range, or domain and print the status and title of the page if applicable. Add the -u and -p options to attempt to login to the page first looking for a form login and failing that, attempt HTTP Basic Auth. Use -f SEARCHSTRING to look for a certain string in the html response in order to test if authentication succeeded. Logs all devices that respond using either the Shodan search term or the target IPs/domain + _results.txt one caveat with searching the response page's HTML is that some form login pages return a JSON object after an authentication request rather than the post-login page's HTML source. Often you can determine whether or not you were successful by just using -f "success"
 
-Default timeout on the requests is 12 seconds. Sends batches of 200 requests concurrently although you can adjust this limit on one line in the main function. Not really any reason it's set to 200, should be fine in the thousands but just to make sure slower networks won't see any problems it is set to 200. If you are using a free Shodan API key then your results will be limited to 100 by Shodan anyway. 
+Default timeout on the requests is 12 seconds. Sends batches of 1000 requests concurrently which can be adjust using the -c option. One should note that Shodan only allows the first page of results (100 hosts) if you are using their free API key. If you have their professional API key you can specify the number of search result pages to test with the -n NUMBER_OF_PAGES argument. By default it will only check page 1.
 
 
 Requirements:
 -----
-
-Shodan API Key
-* Give the script the -api YOUR_API_KEY argument OR
-* Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
-
 Python 2.7
 * mechanize
 * gevents
 * BeautifulSoup
-* shodan
+* shodan (if giving the -s option)
 
 Modern linux
 * Tested on Kali 1.0.6
+
+Shodan API Key (only if you are giving the -s SEARCHTERM argument)
+* Give the script the -api YOUR_API_KEY argument OR
+* Edit line 61 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
+
 
 Usage
 -----
 
 ``` shell
-python shodan_pharmer.py -s 'dd-wrt' -t -u root -p admin -f 'Advanced Routing'
+python login_pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
 ```
-Search Shodan for "dd-wrt" and attempt to login to the results using the username root and the password admin; then check if the landing page's HTML contains the string "Advanced Routing". Due to the addition of the -t aregument for --textbox this will attempt to login using both a form sign-in page and HTTP Basic Auth if there aren't any forms in the response. Without the -t option it will only attempt HTTP Basic Auth which will have minor performance benefits. You can put raw html in the -f argument as well.
+Search Shodan for "dd-wrt" using the given api key and attempt to login to the results using the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string "Advanced Routing". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found.
 
 
 ``` shell
-python shodan_pharmer.py -s 'dd-wrt'
+python device_pharmer.py -t 192.168.0-2.1-100 -c 100
 ```
-Hit all the IPs in the Shodan results and return the status and the title if it responds.
+Targeting 192.168.0-2.1-100 is telling the script to concurrently open 192.168.0.1-101, 192.168.1.1-101, and 192.168.2.1-101 and to gather the status and title of the response pages. -c 100 will limit concurrency to 100 pages at a time so this script will pass through 3 groups of 100 IPs each. Since the default timeout within the script is 12 seconds this will take about ~36 seconds to complete.
 
 
 ``` shell
-python shodan_pharmer.py -ip 192.168.1.1 
+python device_pharmer.py -t www.purple.com/login -ssl -u JigsUp -p whoopwhoop
 ```
-Try hitting a single device's IP address.
+Try logging into www.purple.com/login using HTTPS specifically with the username JigsUp and password whoopwhoop.
 
 
 ### All options:
 
--api APIKEY: use this API key when searching Shodan
+-api APIKEY: use this API key when searching Shodan (only necessary in conjunction with -s)
+
+-c CONCURRENT: send a specified number of requests concurrently; default=1000
 
 -f FINDTERMS: search for the argument string in the html of each response; upon a match print it and log it
 
--ip IPADDRESS: try hitting this ip address rather than shodan search results and return response information
+-n NUMPAGES: go through specified amount of Shodan search result pages collecting IPs; 100 results per page
 
 -p PASSWORD: attempt to login using this password
 
 -s SEARCHTERMS: search Shodan for term(s) and print each IP address, whether the page returned a response, and if so print the title of the returned page (follows redirects)
 
--t: Try to find a form to login to on the response page and default back to HTTP Basic Auth if no forms are found 
+-ssl: specifically send HTTPS requests to all targets 
+
+-t IPADDRESS/DOMAIN/IPRANGE: try hitting this domain, IP, or IP range instead of using Shodan to populate the targets list and return response information
 
 -u USERNAME: attempt to login using this username
 
@@ -60,7 +64,7 @@ Try hitting a single device's IP address.
 License
 -------
 
-Copyright (c) 2013, Dan McInerney
+Copyright (c) 2014, Dan McInerney
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
