@@ -52,16 +52,16 @@ def parse_args():
    epilog='-----------------------------------------------------------------------------------\n'
           'Examples:\n\n'
           '  -Search Shodan for "dd-wrt" and print the title of each result\'s response page:\n\n'
-          '      python device_pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4\n\n'
+          '      python device-pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4\n\n'
           '  -Open a range of IP addresses, print the title of each response page and\n'
           '   make 100 requests concurrently:\n\n'
-          '      python device_pharmer.py -t 192.168.0-5.1-254 -c 100\n\n'
+          '      python device-pharmer.py -t 192.168.0-5.1-254 -c 100\n\n'
           '  -Search Shodan for "dd-wrt" and attempt to login with "root" using password "admin"\n'
           '   then check the response page\'s html for the string ">Advanced Routing<":\n\n'
-          '      python device_pharmer.py -s "dd-wrt" -u root -p admin -f ">Advanced Routing<"\n\n'
+          '      python device-pharmer.py -s "dd-wrt" -u root -p admin -f ">Advanced Routing<"\n\n'
           '  -Open www.reddit.com specifically with https:// and attempt to login using "sirsmit418"\n'
           '   and password "whoopwhoop":\n\n'
-          '      python device_pharmer.py -t www.reddit.com -ssl -u sirsmit418 -p whoopwhoop')
+          '      python device-pharmer.py -t www.reddit.com -ssl -u sirsmit418 -p whoopwhoop')
 
    parser.add_argument("-api", "--apikey", help="Your api key")
    parser.add_argument("-c", "--concurrent", default='1000', help="Enter number of concurrent requests to make; default = 1000")
