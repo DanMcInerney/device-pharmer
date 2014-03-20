@@ -25,19 +25,19 @@ Usage
 -----
 
 ``` shell
-python device_pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
+python device-pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
 ```
 Search Shodan for "dd-wrt" using the given api key and attempt to login to the results using the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string "Advanced Routing". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found.
 
 
 ``` shell
-python device_pharmer.py -t 192.168.0-2.1-100 -c 100
+python device-pharmer.py -t 192.168.0-2.1-100 -c 100
 ```
 Targeting 192.168.0-2.1-100 is telling the script to concurrently open 192.168.0.1-101, 192.168.1.1-101, and 192.168.2.1-101 and to gather the status and title of the response pages. -c 100 will limit concurrency to 100 pages at a time so this script will pass through 3 groups of 100 IPs each. Since the default timeout within the script is 12 seconds this will take about ~36 seconds to complete.
 
 
 ``` shell
-python device_pharmer.py -t www.reddit.com/login -ssl -u sirsmit418 -p whoopwhoop -f 'tattoos'
+python device-pharmer.py -t www.reddit.com/login -ssl -u sirsmit418 -p whoopwhoop -f 'tattoos'
 ```
 Try logging into www.reddit.com/login using HTTPS specifically with the username sirsmit418 and password whoopwhoop. Look for the text "tattoos" correlating to a subscribed subreddit in the response html to check for authentication success.
 
@@ -89,4 +89,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ***
 * [danmcinerney.org](danmcinerney.org)
-* [![Flattr this](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=DanMcInerney&url=https://github.com/DanMcInerney/shodan_pharmer&title=shodan_pharmer&language=&tags=github&category=software) 
+* [![Flattr this](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=DanMcInerney&url=https://github.com/DanMcInerney/device-pharmer&title=device-pharmer&language=&tags=github&category=software) 
