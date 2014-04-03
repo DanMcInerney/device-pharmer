@@ -188,14 +188,20 @@ class Scraper():
     def resp_no_auth(self, target):
         ''' No username/password argument given '''
         no_auth_resp = self.br.open('%s' % target)
-        brtitle = self.br.title()
+        try:
+            brtitle = self.br.title()
+        except Exception:
+            brtitle = None
         return no_auth_resp, brtitle
 
     def resp_basic_auth(self, target):
         ''' When there are no login forms on page but -u and -p are given'''
         self.br.add_password('%s' % target, self.user, self.passwd)
         basic_auth_resp = self.br.open('%s' % target)
-        brtitle = self.br.title()
+        try:
+            brtitle = self.br.title()
+        except Exception:
+            brtitle = None
         return basic_auth_resp, brtitle
 
     def resp_to_textboxes(self, target):
@@ -206,11 +212,17 @@ class Scraper():
 
         try:
             resp = self.br.open('%s' % target)
-            brtitle1 = self.br.title()
+            try:
+                brtitle1 = self.br.title()
+            except Exception:
+                brtitle1 = None
             forms = self.br.forms()
             self.br.form = self.find_password_form(forms)
             resp = self.fill_out_form()
-            brtitle = self.br.title()
+            try:
+                brtitle = self.br.title()
+            except Exception:
+                brtitle = None
         except Exception:
             # If trying to login via form, try basic auth
             try:
