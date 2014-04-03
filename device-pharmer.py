@@ -94,7 +94,9 @@ def shodan_search(search, apikey, pages):
         print '[*] Page 1...'
         pages = max_pages(pages, total_results)
         for r in results['matches']:
-            ips_found.append(r['ip'])
+            if r['port'] in [21, 22, 23, 25, 26]:
+                r['port'] = 80
+            ips_found.append('%s:%s' % (r['ip'], r['port']))
 
         if pages > 1:
             i = 2
