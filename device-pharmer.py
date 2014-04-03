@@ -311,7 +311,7 @@ class Scraper():
         return match
 
     def final_print(self, mark, target, label, sublabel):
-        target = target.ljust(23)
+        target = target.ljust(29)
 
         if self.search:
             name = self.search
