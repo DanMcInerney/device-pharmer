@@ -24,6 +24,12 @@ Shodan API Key (only if you are giving the -s SEARCHTERM argument)
 Usage
 -----
 
+Simplest usage:
+``` shell
+python device-pharmer.py -s "dir-300" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4
+```
+Search Shodan for "dir-300" using the API key Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4. Print the IP and title of the response page should it exist.
+
 ``` shell
 python device-pharmer.py -s "dd-wrt" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f ">Advanced Routing<" --proxy 123.12.12.123:8080 --timeout 30
 ```
