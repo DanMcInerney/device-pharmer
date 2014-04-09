@@ -19,7 +19,8 @@ eequires:   Linux
 
 __author__ = Dan McInerney
              danmcinerney.org
-             @danhmcinerney
+             Twitter: danhmcinerney
+             Gmail: danhmcinerney
 '''
 
 #This must be one of the first imports or else we get threading error on completion
@@ -38,8 +39,6 @@ import cookielib
 from socket import setdefaulttimeout
 import re
 from sys import exit
-# Mechanize doesn't respsect timeouts when it comes to reading/waiting for SSL info so this is necessary
-setdefaulttimeout(12)
 
 # Including lxml in case someone wants to use it instead of BeautifulSoup
 #import lxml
@@ -51,27 +50,31 @@ def parse_args():
    formatter_class=argparse.RawDescriptionHelpFormatter,
    epilog='-----------------------------------------------------------------------------------\n'
           'Examples:\n\n'
-          '  -Search Shodan for "dd-wrt" and print the title of each result\'s response page:\n\n'
-          '      python device-pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4\n\n'
+          '  -Search Shodan for "dd-wrt" using the specified API key and print the title of each\n'
+          '   result\'s response page:\n\n'
+          '      python device-pharmer.py -s "dd-wrt" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4\n\n'
           '  -Open a range of IP addresses, print the title of each response page and\n'
           '   make 100 requests concurrently:\n\n'
           '      python device-pharmer.py -t 192.168.0-5.1-254 -c 100\n\n'
           '  -Search Shodan for "dd-wrt" and attempt to login with "root" using password "admin"\n'
-          '   then check the response page\'s html for the string ">Advanced Routing<":\n\n'
-          '      python device-pharmer.py -s "dd-wrt" -u root -p admin -f ">Advanced Routing<"\n\n'
+          '   then check the response page\'s html for the string ">Advanced Routing<" and last,\n' 
+          '   use a proxy of 123.12.12.123 on port 8080:\n\n'
+          '      python device-pharmer.py -s "dd-wrt" -u root -p admin -f ">Advanced Routing<" --proxy 123.12.12.123:8080\n\n'
           '  -Open www.reddit.com specifically with https:// and attempt to login using "sirsmit418"\n'
-          '   and password "whoopwhoop":\n\n'
+          '   with the password "whoopwhoop":\n\n'
           '      python device-pharmer.py -t www.reddit.com -ssl -u sirsmit418 -p whoopwhoop')
 
-   parser.add_argument("-api", "--apikey", help="Your api key")
+   parser.add_argument("-a", "--apikey", help="Your api key")
    parser.add_argument("-c", "--concurrent", default='1000', help="Enter number of concurrent requests to make; default = 1000")
    parser.add_argument("-f", "--findstring", help="Search html for a string; can be used to determine if a login was successful")
    parser.add_argument("-n", "--numpages", default='1', help="Number of pages deep to go in Shodan results with 100 results per page; default is 1")
    parser.add_argument("-p", "--password", help="Enter password after this argument")
+   parser.add_argument("--proxy", help="Enter a proxy to use, e.g. --proxy user:password@123.12.12.123:8080 or just a simple IP:port will work too")
    parser.add_argument("-s", "--shodansearch", help="Your search terms")
    parser.add_argument("-ssl", help="Test all the results using https:// rather than default http://", action="store_true")
    parser.add_argument("-t", "--targets", help="Enter an IP, a domain, or a range of IPs to fetch (e.g. 192.168.0-5.1-254 will"
                        "fetch 192.168.0.1 to 192.168.5.254; if using a domain include the subdomain if it exists: sub.domain.com or domain.com)")
+   parser.add_argument("--timeout", default='12', help="Set the timeout for each URI request in seconds; default is 12")
    parser.add_argument("-u", "--username", help="Enter username after this argument")
    return parser.parse_args()
 
@@ -127,13 +130,19 @@ def max_pages(pages, total_results):
     else:
         return pages
 
-def browser_mechanize():
+def browser_mechanize(proxy, ssl):
     ''' Start headless browser '''
     br = mechanize.Browser()
     # Cookie Jar
     cj = cookielib.LWPCookieJar()
     br.set_cookiejar(cj)
     # Browser options
+    if proxy and ssl:
+        print '[*] HTTPS proxies are unsupported, using the proxy specified anyway: %s' % proxy
+        br.set_proxies({'http':proxy})
+    elif proxy:
+        print '[*] HTTP proxy being employed: %s' % proxy
+        br.set_proxies({'http':proxy})
     br.set_handle_equiv(True)
     br.set_handle_gzip(True)
     br.set_handle_redirect(True)
@@ -151,12 +160,14 @@ class Scraper():
         self.passwd = args.password
         self.findstring = args.findstring
         self.search = args.shodansearch
-        if args.ssl:
+        self.ssl = args.ssl
+        if self.ssl:
             self.uri_prefix = 'https://'
         else:
             self.uri_prefix = 'http://'
+        self.proxy = args.proxy
         self.targets = args.targets
-        self.br = browser_mechanize()
+        self.br = browser_mechanize(self.proxy, self.ssl)
 
     def run(self, target):
         target = self.uri_prefix+target
@@ -407,6 +418,9 @@ def main(args):
 
     if targets == [] or targets == None:
         exit('[!] No valid targets')
+
+    # Mechanize doesn't respsect timeouts when it comes to reading/waiting for SSL info so this is necessary
+    setdefaulttimeout(int(args.timeout))
 
     con = int(args.concurrent)
 

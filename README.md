@@ -1,6 +1,6 @@
 Concurrently open either Shodan search results, a specified IP, IP range, or domain and print the status and title of the page if applicable. Add the -u and -p options to attempt to login to the page first looking for a form login and failing that, attempt HTTP Basic Auth. 
 
-Use -f SEARCHSTRING to look for a certain string in the html response in order to test if authentication succeeded. Logs all devices that respond using either the Shodan search term or the target IPs/domain + _results.txt. One caveat with searching the response page's HTML is that some form login pages return a JSON object response after an authentication request rather than the post-login page's HTML source. Often you can determine whether or not you were successful by just using -f "success"
+Use -f SEARCHSTRING to look for a certain string in the html response in order to test if authentication succeeded. Logs all devices that respond using either the Shodan search term or the target IPs/domain + _results.txt. One caveat with searching the response page's HTML is that some form login pages return a JSON object response after an authentication request rather than the post-login page's HTML source. Often you can determine whether or not you were successful by just using -f "success" in scenarios like this.
 
 Default timeout on the requests is 12 seconds. Sends batches of 1000 requests concurrently which can be adjust using the -c option. One should note that Shodan only allows the first page of results (100 hosts) if you are using their free API key. If you have their professional API key you can specify the number of search result pages to test with the -n NUMBER_OF_PAGES argument. By default it will only check page 1.
 
@@ -17,7 +17,7 @@ Modern linux
 * Tested on Kali 1.0.6
 
 Shodan API Key (only if you are giving the -s SEARCHTERM argument)
-* Give the script the -api YOUR_API_KEY argument OR
+* Give the script the -a YOUR_API_KEY argument OR
 * Edit line 82 to do it permanently and feel free to offer a pull request after you perform this so you have it in your records; safe hands and all ;). Don't have an API key? Get one free easily [from shodan](http://www.shodanhq.com/account/register)... alternatively, explore your Google dorking skills before downloading some Shodan ones.
 
 
@@ -25,9 +25,9 @@ Usage
 -----
 
 ``` shell
-python device-pharmer.py -s "dd-wrt" -api Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f "Advanced Routing"
+python device-pharmer.py -s "dd-wrt" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f ">Advanced Routing<" --proxy 123.12.12.123:8080 --timeout 30
 ```
-Search Shodan for "dd-wrt" using the given api key and attempt to login to the results using the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string "Advanced Routing". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found.
+Search Shodan for "dd-wrt" using the given api key and attempt to login to the results with the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string ">Advanced Routing<". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found. Finally, use an HTTP proxy at 123.12.12.123:8080 for all requests and set the timeout to 30s.
 
 
 ``` shell
@@ -44,7 +44,7 @@ Try logging into www.reddit.com/login using HTTPS specifically with the username
 
 ### All options:
 
--api APIKEY: use this API key when searching Shodan (only necessary in conjunction with -s)
+-a APIKEY: use this API key when searching Shodan (only necessary in conjunction with -s)
 
 -c CONCURRENT: send a specified number of requests concurrently; default=1000
 
@@ -54,11 +54,15 @@ Try logging into www.reddit.com/login using HTTPS specifically with the username
 
 -p PASSWORD: attempt to login using this password
 
+--proxy PROXY: use this proxy for making requests; to login to the proxy with HTTP Basic do something like, user:pass@123.12.12.123:8080
+
 -s SEARCHTERMS: search Shodan for term(s) and print each IP address, whether the page returned a response, and if so print the title of the returned page (follows redirects)
 
 -ssl: specifically send HTTPS requests to all targets 
 
 -t IPADDRESS/DOMAIN/IPRANGE: try hitting this domain, IP, or IP range instead of using Shodan to populate the targets list and return response information
+
+--timeout TIMEOUT: set the timeout for each URI in seconds; default is 12
 
 -u USERNAME: attempt to login using this username
 
