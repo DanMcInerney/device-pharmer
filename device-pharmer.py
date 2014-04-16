@@ -419,7 +419,7 @@ def main(args):
     if targets == [] or targets == None:
         exit('[!] No valid targets')
 
-    # Mechanize doesn't respsect timeouts when it comes to reading/waiting for SSL info so this is necessary
+    # Mechanize doesn't respect timeouts when it comes to reading/waiting for SSL info so this is necessary
     setdefaulttimeout(int(args.timeout))
 
     con = int(args.concurrent)
