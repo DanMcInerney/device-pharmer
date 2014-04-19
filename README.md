@@ -26,12 +26,12 @@ Usage
 
 Simplest usage:
 ``` shell
-python device-pharmer.py -s "dir-300" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4
+python device-pharmer.py -s 'dir-300' -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4
 ```
 Search Shodan for "dir-300" using the API key Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4. Print the IP and title of the response page should it exist.
 
 ``` shell
-python device-pharmer.py -s "dd-wrt" -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f ">Advanced Routing<" --proxy 123.12.12.123:8080 --timeout 30
+python device-pharmer.py -s 'dd-wrt' -a Wutc4c3T78gRIKeuLZesI8Mx2ddOiP4 -u admin -p password -n 5 -f ">Advanced Routing<" --proxy 123.12.12.123:8080 --timeout 30
 ```
 Search Shodan for "dd-wrt" using the given api key and attempt to login to the results with the username "admin" and the password "password". Gather only the first 5 pages (500 hosts) of Shodan results and check if the landing page's HTML contains the string ">Advanced Routing<". Print "* MATCH *" along with the IP and title of the page in the output and log if the string is found. Finally, use an HTTP proxy at 123.12.12.123:8080 for all requests and set the timeout to 30s.
 
