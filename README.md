@@ -42,9 +42,6 @@ Search Shodan for "dd-wrt" using the given api key and attempt to login to the r
 python device-pharmer.py -t 192.168.0-2.1-100 -c 100
 ```
 Targeting 192.168.0-2.1-100 is telling the script to concurrently open 192.168.0.1-101, 192.168.1.1-101, and 192.168.2.1-101 and to gather the status and title of the response pages. -c 100 will limit concurrency to 100 pages at a time so this script will pass through 3 groups of 100 IPs each. Since the default timeout within the script is 15 seconds this will take about ~45 seconds to complete.
-=======
-Targeting 192.168.0-2.1-100 is telling the script to concurrently open 192.168.0.1-101, 192.168.1.1-101, and 192.168.2.1-101 and to gather the status and title of the response pages. -c 100 will limit concurrency to 100 pages at a time so this script will pass through 3 groups of 100 IPs each. Since the default timeout within the script is 12 seconds this will take about ~36 seconds to complete.
-
 
 ``` shell
 python device-pharmer.py -t www.reddit.com/login -ssl -u sirsmit418 -p whoopwhoop -f 'tattoos'
@@ -56,7 +53,6 @@ python device-pharmer.py --ipfile list_of_ips.txt
 ```
 Test each IP from a textfile of newline-separated IPs
 
-=======
 
 ### All options:
 
@@ -68,7 +64,6 @@ Test each IP from a textfile of newline-separated IPs
 
 --ipfile IPTEXTFILE: test each IP in a list of newline-separated IPs from the specified text file
 
-=======
 -n NUMPAGES: go through specified amount of Shodan search result pages collecting IPs; 100 results per page
 
 -p PASSWORD: attempt to login using this password
@@ -82,8 +77,6 @@ Test each IP from a textfile of newline-separated IPs
 -t IPADDRESS/DOMAIN/IPRANGE: try hitting this domain, IP, or IP range instead of using Shodan to populate the targets list and return response information
 
 --timeout TIMEOUT: set the timeout for each URI in seconds; default is 15
-=======
---timeout TIMEOUT: set the timeout for each URI in seconds; default is 12
 
 -u USERNAME: attempt to login using this username
 
