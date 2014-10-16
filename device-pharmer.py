@@ -111,7 +111,7 @@ def shodan_search(search, apikey, pages, ipfile):
                 results = api.search(search, page=i)
                 print '[*] Page %d...' % i
                 for r in results['matches']:
-                    ips_found.append(r['ip'])
+                    ips_found.append(r['ip_str'])
                 i += 1
 
         return ips_found
