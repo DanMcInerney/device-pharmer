@@ -80,14 +80,14 @@ def parse_args():
    return parser.parse_args()
 
 def shodan_search(search, apikey, pages, ipfile):
-    from shodan import WebAPI
+    import shodan
 
     if apikey:
         API_KEY = apikey
     else:
         API_KEY = 'ENTER YOUR API KEY HERE AND KEEP THE QUOTES'
 
-    api = WebAPI(API_KEY)
+    api = shodan.Shodan(API_KEY)
 
     ips_found = []
 
@@ -103,7 +103,7 @@ def shodan_search(search, apikey, pages, ipfile):
             # ftp, ssh, telnet, smtp, smtp, netbios x3, smb 
             if r['port'] in [21, 22, 23, 25, 26, 137, 138, 139, 445]:
                 r['port'] = 80
-            ips_found.append('%s:%s' % (r['ip'], r['port']))
+            ips_found.append('%s:%s' % (r['ip_str'], r['port']))
 
         if pages > 1:
             i = 2

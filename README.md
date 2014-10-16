@@ -1,15 +1,11 @@
+device-pharmer
+======
+
 Concurrently open either Shodan search results, a specified IP, IP range, domain, or list of IPs from a text file and print the status and title of the page if applicable. Add the -u and -p options to attempt to login to the page first looking for a form login and failing that, attempt HTTP Basic Auth. 
 
 Use -f SEARCHSTRING to look for a certain string in the html response in order to test if authentication succeeded. Logs all devices that respond using either the Shodan search term or the target IPs/domain + _results.txt. One caveat with searching the response page's HTML is that some form login pages return a JSON object response after an authentication request rather than the post-login page's HTML source. Often you can determine whether or not you were successful by just using -f "success" in scenarios like this.
 
 Default timeout on the requests is 15 seconds. Sends batches of 1000 requests concurrently which can be adjust using the -c option. One should note that Shodan only allows the first page of results (100 hosts) if you are using their free API key. If you have their professional API key you can specify the number of search result pages to test with the -n NUMBER_OF_PAGES argument. By default it will only check page 1.
-=======
-Concurrently open either Shodan search results, a specified IP, IP range, or domain and print the status and title of the page if applicable. Add the -u and -p options to attempt to login to the page first looking for a form login and failing that, attempt HTTP Basic Auth. 
-
-Use -f SEARCHSTRING to look for a certain string in the html response in order to test if authentication succeeded. Logs all devices that respond using either the Shodan search term or the target IPs/domain + _results.txt. One caveat with searching the response page's HTML is that some form login pages return a JSON object response after an authentication request rather than the post-login page's HTML source. Often you can determine whether or not you were successful by just using -f "success" in scenarios like this.
-
-Default timeout on the requests is 12 seconds. Sends batches of 1000 requests concurrently which can be adjust using the -c option. One should note that Shodan only allows the first page of results (100 hosts) if you are using their free API key. If you have their professional API key you can specify the number of search result pages to test with the -n NUMBER_OF_PAGES argument. By default it will only check page 1.
-
 
 Requirements:
 -----
