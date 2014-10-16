@@ -74,11 +74,12 @@ def parse_args():
    parser.add_argument("-ssl", help="Test all the results using https:// rather than default http://", action="store_true")
    parser.add_argument("-t", "--targets", help="Enter an IP, a domain, or a range of IPs to fetch (e.g. 192.168.0-5.1-254 will"
                        "fetch 192.168.0.1 to 192.168.5.254; if using a domain include the subdomain if it exists: sub.domain.com or domain.com)")
-   parser.add_argument("--timeout", default='12', help="Set the timeout for each URI request in seconds; default is 12")
+   parser.add_argument("--timeout", default='15', help="Set the timeout for each URI request in seconds; default is 15")
    parser.add_argument("-u", "--username", help="Enter username after this argument")
+   parser.add_argument("--ipfile", help="Test IPs from a text file (IPs should be separated by newlines)")
    return parser.parse_args()
 
-def shodan_search(search, apikey, pages):
+def shodan_search(search, apikey, pages, ipfile):
     from shodan import WebAPI
 
     if apikey:
@@ -90,6 +91,7 @@ def shodan_search(search, apikey, pages):
 
     ips_found = []
 
+    # Get IPs from Shodan search results
     try:
         results = api.search(search, page=1)
         total_results = results['total']
@@ -116,6 +118,19 @@ def shodan_search(search, apikey, pages):
 
     except Exception as e:
         print '[!] Shodan search error:', e
+
+def get_ips_from_file(ipfile):
+    ''' Read IPs from a file '''
+    ips_found = []
+    try:
+        with open(ipfile) as ips:
+            for line in ips:
+                ip = line.strip()
+                ips_found.append(ip)
+    except IOError:
+        exit('[!] Are you sure the file %s exists in this directory?' % ipfile)
+
+    return ips_found
 
 def max_pages(pages, total_results):
     ''' Measures the max # of pages in Shodan results. Alternative to this
@@ -160,6 +175,7 @@ class Scraper():
         self.passwd = args.password
         self.findstring = args.findstring
         self.search = args.shodansearch
+        self.ipfile = args.ipfile
         self.ssl = args.ssl
         if self.ssl:
             self.uri_prefix = 'https://'
@@ -330,8 +346,8 @@ class Scraper():
             name = self.search
         elif self.targets:
             name = self.targets
-        else:
-            name = None
+        elif self.ipfile:
+            name = self.ipfile
 
         name = name.replace('/', '')
 
@@ -401,20 +417,33 @@ def ip_range(iprange):
     return ips
 #############################################################################
 
+def input_check(args):
+    ''' Check for multi inputs, or lack of target inputs '''
+    if not args.targets and not args.shodansearch and not args.ipfile:
+        exit('[!] No targets found. Use the -s option to specify a search term for Shodan, the -t option to specify an IP, IP range, or domain, or use the --ipfile option to read from a list of IPs in a text file')
+
+    inputs = 0
+    if args.targets:
+        inputs += 1
+    if args.shodansearch:
+        inputs += 1
+    if args.ipfile:
+        inputs += 1
+    if inputs > 1:
+        exit('[!] Multiple target inputs specified, choose just one target input option: -t (IP, IP range, or domain), -s (Shodan search results), or --ipfile (IPs from a text file)')
+
 def main(args):
 
     S = Scraper(args)
 
-    if not args.targets and not args.shodansearch:
-        exit('[!] No targets found. Please use the -s option to specify a search term for Shodan  or specify an IP, IP range, or domain using the -t option')
-
-    if args.targets and args.shodansearch:
-        print '[+] Both -s and -t arguments found; defaulting to the targets listed after -t'
+    input_check(args)
 
     if args.targets:
         targets = get_targets_from_args(args.targets)
     elif args.shodansearch:
-        targets = shodan_search(args.shodansearch, args.apikey, int(args.numpages))
+        targets = shodan_search(args.shodansearch, args.apikey, int(args.numpages), args.ipfile)
+    elif args.ipfile:
+        targets = get_ips_from_file(args.ipfile)
 
     if targets == [] or targets == None:
         exit('[!] No valid targets')
