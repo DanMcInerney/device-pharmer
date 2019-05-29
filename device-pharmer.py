@@ -34,7 +34,7 @@ warnings.filterwarnings("ignore")
 import gevent
 import argparse
 import mechanize
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 import cookielib
 from socket import setdefaulttimeout
 import re
